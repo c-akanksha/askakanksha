@@ -108,17 +108,19 @@ const ChatBubble = ({ message }) => {
                 ))}
               {message.type === "sections" && (
                 <>
-                  {typeof message.data === "string" ? (
+                  {typeof message.data === "string" && (
                     <Paper sx={{ p: 2 }}>
                       <Typography>{message.data}</Typography>
                     </Paper>
-                  ) : (
+                  )}
+
+                  {typeof message.data === "object" && message.data && (
                     <Box
                       sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                     >
                       {(Array.isArray(message.data)
                         ? message.data
-                        : [message.data]
+                        : Object.values(message.data)
                       ).map((item, index) => (
                         <ExperienceCard key={index} experience={item} />
                       ))}
