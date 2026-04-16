@@ -1,5 +1,6 @@
-import { Box, Paper } from "@mui/material";
+import { Avatar, Box, Paper } from "@mui/material";
 import { keyframes } from "@mui/system";
+import me from "../assets/profile.jpg";
 
 const bounce = keyframes`
   0%,80%,100% { transform: scale(0.6); opacity: 0.4 }
@@ -8,9 +9,22 @@ const bounce = keyframes`
 
 export default function TypingIndicator() {
   return (
-    <Box sx={{ px: 2, mb: 2 }}>
+    <Box sx={{ px: 2, mb: 2, display: "flex" }}>
+      <Avatar
+        sx={{
+          width: 36,
+          height: 36,
+          fontSize: 14,
+          border: "1px solid rgba(0,0,0,0.08)",
+
+          boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
+        }}
+        src={me}
+        alt={"bot typing"}
+      />
       <Paper
         sx={{
+          marginX: 1,
           p: 1.5,
           maxWidth: "60px",
           borderRadius: 3,
