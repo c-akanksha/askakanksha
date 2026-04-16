@@ -83,9 +83,20 @@ const ChatBubble = ({ message }) => {
                     borderRadius: 3,
                     background: "rgba(255,255,255,0.75)",
                     border: "1px solid rgba(0,0,0,0.08)",
+                    width: "100%",
+                    maxWidth: "100%",
+                    overflow: "hidden",
+                    boxSizing: "border-box",
                   }}
                 >
-                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: 1,
+                      width: "100%",
+                    }}
+                  >
                     {message.data.map((item, i) => (
                       <Chip
                         key={i}
@@ -94,6 +105,13 @@ const ChatBubble = ({ message }) => {
                           background: "rgba(99,102,241,0.1)",
                           color: "#4f46e5",
                           fontSize: "0.8rem",
+                          maxWidth: "100%",
+                          p: 0.5,
+                          height: "auto",
+                          "& .MuiChip-label": {
+                            display: "block",
+                            whiteSpace: "normal",
+                          },
                         }}
                       />
                     ))}
