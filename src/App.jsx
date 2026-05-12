@@ -47,7 +47,7 @@ function App() {
     const sectionQuestions = {
       summary: "Summarize her background",
       skills: "What are her technical skills?",
-      projects: "Explain her projects and highlight her ML projects",
+      projects: "Explain her all projects, highlight her AI related projects, give links if any",
       experience: "What experience does she have?",
       achievements: "Tell me about her achievements",
     };
