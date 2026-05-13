@@ -26,6 +26,7 @@ const renderBlock = (block, i) => {
     case "cards":
       return <ProjectBlock key={i} block={block} />;
 
+    case "steps":
     case "timeline":
       return <TimelineBlock key={i} block={block} />;
 
