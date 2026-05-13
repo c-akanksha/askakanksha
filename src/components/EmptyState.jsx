@@ -3,7 +3,11 @@ import SuggestionChips from "./SuggestionChips";
 import { AutoAwesome } from "@mui/icons-material";
 import StatusWithText from "./StatusWithText";
 
-export function EmptyState({ onSuggestionClick, backendStatus }) {
+export function EmptyState({
+  backendStatus,
+  suggestions = [],
+  onSuggestionClick,
+}) {
   return (
     <Container maxWidth="md">
       <Box
@@ -66,16 +70,10 @@ export function EmptyState({ onSuggestionClick, backendStatus }) {
         </Box>
 
         {backendStatus === "success" && (
-          <Box sx={{ width: "100%" }}>
-            <Typography
-              variant="subtitle2"
-              color="text.secondary"
-              sx={{ mb: 2 }}
-            >
-              Try asking:
-            </Typography>
-            <SuggestionChips onSuggestionClick={onSuggestionClick} />
-          </Box>
+          <SuggestionChips
+            suggestions={suggestions}
+            onSuggestionClick={onSuggestionClick}
+          />
         )}
       </Box>
     </Container>

@@ -1,8 +1,7 @@
-import { Box, Paper, Typography, Avatar, Chip } from "@mui/material";
-import ProjectCard from "./ProjectCard";
-import ExperienceCard from "./ExperienceCard";
+import { Box, Avatar, Typography } from "@mui/material";
 import me from "../assets/profile.jpg";
 import user from "../assets/user.png";
+import MessageRenderer from "./MessageRenderer";
 
 const ChatBubble = ({ message }) => {
   const isUser = message.sender === "user";
@@ -12,7 +11,7 @@ const ChatBubble = ({ message }) => {
       sx={{
         display: "flex",
         justifyContent: isUser ? "flex-end" : "flex-start",
-        px: 2,
+        p: 2,
         mb: 2,
       }}
     >
@@ -20,133 +19,66 @@ const ChatBubble = ({ message }) => {
         sx={{
           display: "flex",
           flexDirection: isUser ? "row-reverse" : "row",
-          alignItems: "flex-end",
-          gap: 1.5,
-          maxWidth: { xs: "95%", sm: "80%", md: "70%" },
+          alignItems: "flex-start",
+          gap: 1.2,
+          maxWidth: "75%",
         }}
       >
+        {/* Avatar */}
         <Avatar
-          sx={{
-            width: 36,
-            height: 36,
-            fontSize: 14,
-            boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
-          }}
           src={isUser ? user : me}
-          alt={isUser ? "user" : "bot"}
+          sx={{
+            width: 34,
+            height: 34,
+            mt: 0.5,
+            boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+          }}
         />
 
-        <Box sx={{ flex: 1 }}>
-          {message.text && (
-            <Paper
-              elevation={0}
+        {/* Bubble */}
+        <Box
+          sx={{
+            px: 2,
+            py: 1.5,
+            borderRadius: 3,
+            position: "relative",
+
+            background: isUser
+              ? "linear-gradient(135deg, #6366f1, #818cf8)"
+              : "rgba(255,255,255,0.75)",
+
+            color: isUser ? "#fff" : "text.primary",
+
+            border: isUser ? "none" : "1px solid rgba(0,0,0,0.08)",
+
+            backdropFilter: !isUser ? "blur(12px)" : "none",
+
+            boxShadow: isUser
+              ? "0 10px 25px rgba(99,102,241,0.25)"
+              : "0 4px 16px rgba(0,0,0,0.06)",
+
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+
+            // 💬 chat bubble feel
+            borderTopLeftRadius: isUser ? 16 : 6,
+            borderTopRightRadius: isUser ? 6 : 16,
+          }}
+        >
+          {/* USER TEXT */}
+          {isUser ? (
+            <Typography
               sx={{
-                px: 2.5,
-                py: 1.8,
-                borderRadius: 4,
-
-                background: isUser
-                  ? "linear-gradient(135deg, #6366f1, #818cf8)"
-                  : "rgba(255,255,255,0.75)",
-
-                color: isUser ? "#fff" : "text.primary",
-
-                border: isUser ? "none" : "1px solid rgba(0,0,0,0.08)",
-
-                boxShadow: isUser
-                  ? "0 10px 25px rgba(99,102,241,0.35)"
-                  : "0 4px 16px rgba(0,0,0,0.08)",
-
-                backdropFilter: "blur(10px)",
+                whiteSpace: "pre-wrap",
+                lineHeight: 1.5,
               }}
             >
-              <Typography
-                variant="body1"
-                sx={{
-                  whiteSpace: "pre-wrap",
-                  lineHeight: 1.7,
-                }}
-              >
-                {message.text}
-              </Typography>
-            </Paper>
-          )}
-
-          {!isUser && message.data && (
-            <Box
-              sx={{ mt: 1.5, display: "flex", flexDirection: "column", gap: 2 }}
-            >
-              {message.type === "list" && Array.isArray(message.data) && (
-                <Paper
-                  sx={{
-                    p: 2,
-                    borderRadius: 3,
-                    background: "rgba(255,255,255,0.75)",
-                    border: "1px solid rgba(0,0,0,0.08)",
-                    width: "100%",
-                    maxWidth: "100%",
-                    overflow: "hidden",
-                    boxSizing: "border-box",
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      gap: 1,
-                      width: "100%",
-                    }}
-                  >
-                    {message.data.map((item, i) => (
-                      <Chip
-                        key={i}
-                        label={item}
-                        sx={{
-                          background: "rgba(99,102,241,0.1)",
-                          color: "#4f46e5",
-                          fontSize: "0.8rem",
-                          maxWidth: "100%",
-                          p: 0.5,
-                          height: "auto",
-                          "& .MuiChip-label": {
-                            display: "block",
-                            whiteSpace: "normal",
-                          },
-                        }}
-                      />
-                    ))}
-                  </Box>
-                </Paper>
-              )}
-
-              {message.type === "cards" &&
-                Array.isArray(message.data) &&
-                message.data.map((item, i) => (
-                  <ProjectCard key={i} project={item} />
-                ))}
-              {message.type === "sections" && (
-                <>
-                  {typeof message.data === "string" && (
-                    <Paper sx={{ p: 2 }}>
-                      <Typography>{message.data}</Typography>
-                    </Paper>
-                  )}
-
-                  {typeof message.data === "object" && message.data && (
-                    <Box
-                      sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-                    >
-                      {(Array.isArray(message.data)
-                        ? message.data
-                        : Object.values(message.data)
-                      ).map((item, index) => (
-                        <ExperienceCard key={index} experience={item} />
-                      ))}
-                    </Box>
-                  )}
-                </>
-              )}
-            </Box>
+              {message.text}
+            </Typography>
+          ) : (
+            /* BOT BLOCKS */
+            <MessageRenderer blocks={message.blocks} />
           )}
         </Box>
       </Box>

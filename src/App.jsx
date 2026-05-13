@@ -1,60 +1,35 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Header } from "./components/Header";
-import { EmptyState } from "./components/EmptyState";
 import ChatBubble from "./components/ChatBubble";
-import TypingIndicator from "./components/TypingIndicator";
-import BottomNavChips from "./components/BottomNavChips";
 import ChatInput from "./components/ChatInput";
+import BottomNavChips from "./components/BottomNavChips";
+import { EmptyState } from "./components/EmptyState";
 
 import {
   addUserMessage,
-  checkBackendStatus,
   sendMessageAsync,
+  checkBackendStatus,
 } from "./slices/chatSlice";
+import { Header } from "./components/Header";
+import TypingIndicator from "./components/TypingIndicator";
 
 function App() {
-  const { messages, backendStatus, loading } = useSelector(
-    (state) => state.chat,
-  );
   const dispatch = useDispatch();
+  const { messages, loading, backendStatus, suggestedQuestions } = useSelector(
+    (s) => s.chat,
+  );
 
-  const messagesEndRef = useRef(null);
-  const [, setSelectedSection] = useState("");
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  const ref = useRef();
 
   useEffect(() => {
     dispatch(checkBackendStatus());
   }, []);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages, loading]);
-
-  const handleSendMessage = (question) => {
-    dispatch(addUserMessage(question));
-    dispatch(sendMessageAsync(question));
-  };
-
-  const handleNavigate = (section) => {
-    setSelectedSection(section);
-
-    const sectionQuestions = {
-      summary: "Summarize her background",
-      skills: "What are her technical skills?",
-      projects: "Explain her ML projects",
-      experience: "What experience does she have?",
-      achievements: "Tell me about her achievements",
-    };
-
-    if (sectionQuestions[section]) {
-      handleSendMessage(sectionQuestions[section]);
-    }
+  const send = (msg) => {
+    dispatch(addUserMessage(msg));
+    dispatch(sendMessageAsync(msg));
   };
 
   return (
@@ -72,26 +47,24 @@ function App() {
       }}
     >
       <Header />
-
       <Box sx={{ flex: 1, overflowY: "auto", pb: 2 }}>
         {messages.length === 0 ? (
           <EmptyState
             backendStatus={backendStatus}
-            onSuggestionClick={handleSendMessage}
+            suggestions={suggestedQuestions}
+            onSuggestionClick={send}
           />
         ) : (
-          <Box sx={{ maxWidth: 1100, mx: "auto", py: 3 }}>
-            {messages.map((m) => (
-              <ChatBubble key={m.id} message={m} />
-            ))}
-            {loading && <TypingIndicator />}
-            <div ref={messagesEndRef} />
-          </Box>
+          messages.map((m) => <ChatBubble key={m.id} message={m} />)
         )}
+        {loading && <TypingIndicator />}
       </Box>
 
-      {messages.length !== 0 && <BottomNavChips onNavigate={handleNavigate} />}
-      <ChatInput onSend={handleSendMessage} disabled={loading} />
+      {messages.length > 0 && (
+        <BottomNavChips suggestions={suggestedQuestions} onNavigate={send} />
+      )}
+
+      <ChatInput onSend={send} disabled={loading} />
     </Box>
   );
 }

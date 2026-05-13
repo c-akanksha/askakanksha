@@ -8,9 +8,7 @@ export const checkBackendStatus = createAsyncThunk(
     try {
       const res = await fetch(`${BASE_URL}`);
       if (!res.ok) throw new Error("Backend not reachable");
-
-      const data = await res.json();
-      return data;
+      return await res.json();
     } catch (err) {
       return thunkAPI.rejectWithValue(err.message);
     }
@@ -23,16 +21,13 @@ export const sendMessageAsync = createAsyncThunk(
     try {
       const res = await fetch(`${BASE_URL}/api/chat`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: message }),
       });
 
-      if (!res.ok) throw new Error("Failed to fetch response");
+      if (!res.ok) throw new Error("Failed request");
 
-      const data = await res.json();
-      return data;
+      return await res.json();
     } catch (err) {
       return thunkAPI.rejectWithValue(err.message);
     }
@@ -42,8 +37,9 @@ export const sendMessageAsync = createAsyncThunk(
 const initialState = {
   messages: [],
   loading: false,
-  backendStatus: "idle", // idle | loading | success | error
+  backendStatus: "idle",
   error: null,
+  suggestedQuestions: [],
 };
 
 const chatSlice = createSlice({
@@ -52,43 +48,81 @@ const chatSlice = createSlice({
   reducers: {
     addUserMessage: (state, action) => {
       state.messages.push({
-        text: action.payload,
+        id: Date.now(),
         sender: "user",
+        text: action.payload,
       });
     },
   },
+
   extraReducers: (builder) => {
     builder
+
+      /* backend status */
       .addCase(checkBackendStatus.pending, (state) => {
         state.backendStatus = "loading";
       })
       .addCase(checkBackendStatus.fulfilled, (state) => {
         state.backendStatus = "success";
       })
-      .addCase(checkBackendStatus.rejected, (state, action) => {
+      .addCase(checkBackendStatus.rejected, (state) => {
         state.backendStatus = "error";
-        state.error = action.payload;
       })
+
+      /* chat */
       .addCase(sendMessageAsync.pending, (state) => {
         state.loading = true;
       })
+
       .addCase(sendMessageAsync.fulfilled, (state, action) => {
         state.loading = false;
-        const parsed = JSON.parse(action.payload.answer);
-        state.messages.push({
-          type: parsed.type,
-          data: parsed.data,
-          text: parsed.type === "text" ? parsed.data : "",
-          sender: "bot",
+
+        const data = action.payload;
+        console.log({ data });
+        let blocks = data.blocks || [];
+
+        let projectGroup = null;
+        const groupedBlocks = [];
+
+        blocks.forEach((block) => {
+          if (block.type === "project_card") {
+            if (!projectGroup) {
+              projectGroup = {
+                type: "project_card",
+                title: "Projects",
+                items: [],
+              };
+            }
+            projectGroup.items.push(block.project);
+          } else {
+            groupedBlocks.push(block);
+          }
         });
+
+        if (projectGroup) groupedBlocks.push(projectGroup);
+        state.messages.push({
+          id: Date.now(),
+          sender: "bot",
+          intent: data.intent,
+          title: data.title,
+          blocks: groupedBlocks,
+        });
+
+        state.suggestedQuestions = data.suggested_questions || [];
       })
-      .addCase(sendMessageAsync.rejected, (state, action) => {
+
+      .addCase(sendMessageAsync.rejected, (state) => {
         state.loading = false;
-        state.error = action.payload;
 
         state.messages.push({
-          text: "Something went wrong. Please try again.",
+          id: Date.now(),
           sender: "bot",
+          blocks: [
+            {
+              type: "text",
+              content: "Something went wrong.",
+            },
+          ],
         });
       });
   },
