@@ -78,7 +78,7 @@ const chatSlice = createSlice({
         state.loading = false;
 
         const data = action.payload;
-        console.log({ data });
+
         let blocks = data.blocks || [];
 
         let projectGroup = null;

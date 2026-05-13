@@ -1,12 +1,12 @@
 import { Typography, Box, Paper } from "@mui/material";
 
 const BulletsBlock = ({ block }) => {
-  if (!block?.items?.length) return null;
-
+  if (!block?.data?.items?.length) return null;
+  const { title, items } = block?.data;
   return (
     <>
       {/* Title */}
-      {block.title && (
+      {title && (
         <Typography
           variant="subtitle2"
           sx={{
@@ -16,7 +16,7 @@ const BulletsBlock = ({ block }) => {
             textTransform: "capitalize",
           }}
         >
-          {block.title}
+          {title}
         </Typography>
       )}
 
@@ -31,7 +31,7 @@ const BulletsBlock = ({ block }) => {
           gap: 1,
         }}
       >
-        {block.items.map((item, i) => (
+        {items.map((item, i) => (
           <Box
             component="li"
             key={i}

@@ -2,11 +2,11 @@ import { Box, Typography, Link } from "@mui/material";
 import { OpenInNew } from "@mui/icons-material";
 
 const LinksBlock = ({ block }) => {
-  if (!block?.items?.length) return null;
+  if (!block?.data?.items?.length) return null;
 
   return (
     <Box>
-      {block.title && (
+      {block.data.title && (
         <Typography
           variant="subtitle2"
           sx={{
@@ -16,12 +16,12 @@ const LinksBlock = ({ block }) => {
             textTransform: "capitalize",
           }}
         >
-          {block.title}
+          {block.data.title}
         </Typography>
       )}
 
       <Box sx={{ display: "flex", flexDirection: "row", gap: 0.8 }}>
-        {block.items.map((item, i) => (
+        {block.data.items.map((item, i) => (
           <Link
             key={i}
             href={item.url}

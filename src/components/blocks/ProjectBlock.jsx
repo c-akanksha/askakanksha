@@ -2,7 +2,6 @@ import ProjectCard from "../card/ProjectCard";
 import { Typography } from "@mui/material";
 
 const ProjectBlock = ({ block }) => {
-  console.log({ block });
   return (
     <>
       <Typography
@@ -16,10 +15,10 @@ const ProjectBlock = ({ block }) => {
       >
         Projects
       </Typography>
-      {block.items.map((project, idx) => (
+      {block.data.items.map((project, idx) => (
         <ProjectCard
           project={project}
-          isLast={idx + 1 === block.items.length}
+          isLast={idx + 1 === block.data.items.length}
         />
       ))}
     </>

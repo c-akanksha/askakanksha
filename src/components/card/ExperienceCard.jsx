@@ -1,7 +1,8 @@
 import { Box, Typography } from "@mui/material";
 
 const ExperienceCard = ({ experience }) => {
-  if (!experience?.items) return null;
+  const items = experience?.data.items;
+  if (!items) return null;
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -36,7 +37,7 @@ const ExperienceCard = ({ experience }) => {
           }}
         />
 
-        {experience.items.map((item, index) => (
+        {items.map((item, index) => (
           <Box
             key={index}
             sx={{

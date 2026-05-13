@@ -1,7 +1,7 @@
 import { Box, Typography, Paper } from "@mui/material";
 
 const StatsBlock = ({ block }) => {
-  if (!block?.items?.length) return null;
+  if (!block?.data?.items?.length) return null;
 
   return (
     <Box>
@@ -14,12 +14,12 @@ const StatsBlock = ({ block }) => {
           textTransform: "capitalize",
         }}
       >
-        {block.title || block.type}
+        {block.type}
       </Typography>
 
       {/* Inline rows */}
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-        {block.items.map((item, i) => (
+        {block.data.items.map((item, i) => (
           <Box
             key={i}
             sx={{
@@ -27,7 +27,7 @@ const StatsBlock = ({ block }) => {
               alignItems: "center",
               py: 0.8,
               borderBottom:
-                i !== block.items.length - 1
+                i !== block.data.items.length - 1
                   ? "1px solid rgba(0,0,0,0.05)"
                   : "none",
             }}

@@ -5,7 +5,7 @@ const SectionBlock = ({ block }) => {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 0.8 }}>
-      {block.title && (
+      {block.data.title && (
         <Typography
           variant="subtitle2"
           sx={{
@@ -15,11 +15,11 @@ const SectionBlock = ({ block }) => {
             textTransform: "capitalize",
           }}
         >
-          {block.title}
+          {block.data.title}
         </Typography>
       )}
 
-      {block.content && (
+      {block.data.content && (
         <Typography
           variant="body2"
           sx={{
@@ -28,7 +28,7 @@ const SectionBlock = ({ block }) => {
             whiteSpace: "pre-wrap",
           }}
         >
-          {block.content}
+          {block.data.content}
         </Typography>
       )}
     </Box>

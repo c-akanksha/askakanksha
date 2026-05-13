@@ -23,7 +23,7 @@ const renderBlock = (block, i) => {
     case "tags":
       return <TagsBlock key={i} block={block} />;
 
-    case "project_card":
+    case "cards":
       return <ProjectBlock key={i} block={block} />;
 
     case "timeline":

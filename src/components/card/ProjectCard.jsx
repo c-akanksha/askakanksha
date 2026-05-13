@@ -10,7 +10,14 @@ const ProjectCard = ({ project, isLast }) => {
   const displayTitle = name || title || "Project";
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 1.2 }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 1.2,
+        mb: isLast ? 0 : 2,
+      }}
+    >
       {/* Header */}
       <Box
         sx={{
@@ -61,9 +68,7 @@ const ProjectCard = ({ project, isLast }) => {
 
       {/* Tech Stack */}
       {Array.isArray(techStack) && techStack.length > 0 && (
-        <Box
-          sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: isLast ? 0 : 2 }}
-        >
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
           {techStack.map((tech, i) => (
             <Chip
               key={i}

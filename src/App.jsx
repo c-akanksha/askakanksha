@@ -38,7 +38,6 @@ function App() {
         display: "flex",
         flexDirection: "column",
         minHeight: "100vh",
-
         background: `
           radial-gradient(circle at 10% 20%, rgba(99,102,241,0.15), transparent 40%),
           radial-gradient(circle at 90% 80%, rgba(134,239,172,0.15), transparent 40%),
@@ -47,17 +46,43 @@ function App() {
       }}
     >
       <Header />
-      <Box sx={{ flex: 1, overflowY: "auto", pb: 2 }}>
-        {messages.length === 0 ? (
-          <EmptyState
-            backendStatus={backendStatus}
-            suggestions={suggestedQuestions}
-            onSuggestionClick={send}
-          />
-        ) : (
-          messages.map((m) => <ChatBubble key={m.id} message={m} />)
-        )}
-        {loading && <TypingIndicator />}
+
+      {/* 👇 CENTERED CHAT CONTAINER */}
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          justifyContent: "center",
+          overflowY: "auto",
+          px: 2,
+          pb: 2,
+        }}
+      >
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: "900px", // 👈 key fix
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
+            py: 2,
+          }}
+        >
+          {messages.length === 0 ? (
+            <EmptyState
+              backendStatus={backendStatus}
+              suggestions={suggestedQuestions}
+              onSuggestionClick={send}
+            />
+          ) : (
+            <>
+              {messages.map((m) => (
+                <ChatBubble key={m.id} message={m} />
+              ))}
+              {loading && <TypingIndicator />}
+            </>
+          )}
+        </Box>
       </Box>
 
       {messages.length > 0 && (
