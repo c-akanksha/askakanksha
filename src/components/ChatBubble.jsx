@@ -21,7 +21,12 @@ const ChatBubble = ({ message }) => {
           flexDirection: isUser ? "row-reverse" : "row",
           alignItems: "flex-start",
           gap: 1.2,
-          maxWidth: "75%",
+          maxWidth: {
+            xs: "100%",
+            sm: "100%",
+            md: "100%",
+            lg: "75%",
+          },
         }}
       >
         {/* Avatar */}
