@@ -22,12 +22,15 @@ export function Header() {
       }}
     >
       <Toolbar
+        disableGutters
         sx={{
           justifyContent: "space-between",
           py: 1,
+          px: 2,
           maxWidth: 1200,
-          mx: "auto",
           width: "100%",
+          mx: "auto",
+          boxSizing: "border-box",
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
